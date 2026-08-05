@@ -1,0 +1,41 @@
+Assumptions for Exp 4: S&P 500 Benchmark Backtest
+======================================================
+
+Data Source
+-----------
+  Price data: yfinance adjusted close (auto_adjust=True).
+  Adjusted close accounts for dividends and stock splits.
+
+Constituent List
+----------------
+  Total tickers in representative list : 100
+  Tickers successfully downloaded      : 97
+  Tickers with no data                 : 3
+  Methodology: static 100-stock list of large-cap S&P 500 members
+    as of 2017. NOT a full CRSP/WRDS historical constituent file.
+  Survivorship bias: partial – stocks that were delisted or merged
+    between 2017 and 2022 may be absent from yfinance data.
+
+Return Computation
+------------------
+  One-year: from first available trading day of the year to the
+    last available trading day of the same year.
+  Five-year: from first available trading day on or after
+    2017-01-01 to last available trading day on or before
+    2022-12-31.
+  Annualized five-year: (1 + total_return)^(1/5) - 1.
+
+Transaction Costs
+-----------------
+  None applied. Returns are gross of transaction costs.
+
+Benchmark Target Values (from paper)
+-------------------------------------
+  Five-year median total return   : ~77.7%
+  Five-year median annualized     : ~12.2%
+  Five-year 90th pct total return : ~257.2%
+  Five-year 10th pct total return : ~-15.3%
+
+Failed Tickers
+--------------
+  BK, CMA, UTX

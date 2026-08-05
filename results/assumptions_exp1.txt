@@ -1,0 +1,49 @@
+=== ASSUMPTIONS LOG: EXP 1 CALIBRATION ===
+
+1. LOR PERPETUITY ASSUMPTION
+   LOR (Life of Rights) contracts are modeled as perpetuities.
+   Multiplier formula: M = x / R
+   where x is the cash-flow scaling factor and R = r + k*s is the
+   instability-adjusted discount rate.
+   Justification: LOR contracts provide royalty income for the full
+   life of the copyright, which is approximated as an infinite horizon.
+
+2. 30Y TREATMENT
+   30-year fixed-term contracts use the finite annuity formula:
+     M = x * [1 - (1+R)^(-30)] / R
+   30Y multipliers lie between 10Y and LOR values for the same
+   discount rate, consistent with duration ordering.
+
+3. LTY CONSTRUCTION METHOD
+   LTY (Last Twelve Months prior Year) is treated as the prior-year
+   annualised royalty income.
+   Revenue instability: s = |LTM/LTY - 1|
+   s = 0 means LTM equals LTY (perfectly stable); larger s indicates
+   greater year-over-year revenue change.
+   Records with LTY = 0 are undefined and would be excluded; none
+   were present in the 1 295-observation synthetic dataset.
+
+4. EXCLUDED RECORDS
+   Records with LTM <= 0 or LTY <= 0 would be excluded (none present).
+   Records with price <= 0 would be excluded (none present).
+   No additional exclusions were applied.
+
+5. OPTIMIZATION SETTINGS
+   Objective: minimise mean squared error (MSE) of the traded multiplier
+   versus the model-implied multiplier across all transactions.
+     MSE = mean[(M_traded_i - M_model_i)^2]
+   Optimizer: scipy.optimize.minimize with bounded method (L-BFGS-B or
+   differential evolution); multiple restarts to avoid local minima.
+   Parameter bounds: r in (0.01, 0.50), a in (0.01, 5.0),
+                     k in (0.00, 1.0),  b in (0.00, 0.10).
+
+6. CALIBRATED PARAMETERS
+   Model 1: r = 12.77%
+   Model 2: r = 8.91%,  a = 0.7985,  k = 0.0599
+   Model 3: r = 9.01%,  a = 0.6521,  k = 0.0591,  b = 0.009825
+
+7. MSE RESULTS
+   Model 1 MSE: 6.9487
+   Model 2 MSE: 6.2632
+   Model 3 MSE: 5.7751
+   Ranking: Model 3 < Model 2 < Model 1  (as expected)
